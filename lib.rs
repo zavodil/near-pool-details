@@ -12,7 +12,7 @@ pub const CALLBACK: Gas = BASE * 2;
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
-#[derive(Debug, Clone, Default, BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, BorshDeserialize, BorshSerialize)]
 pub struct Field {
     pub field_id: u64,
     pub pool_id: String,
@@ -20,7 +20,8 @@ pub struct Field {
     pub value: String,
 }
 
-type FieldsByPools = HashMap<u64, Field>;
+type FieldsByPools = near_sdk::collections::UnorderedMap<u64, Vec<Field>>;
+//type FieldsByPools = HashMap<u64, Field>;
 
 #[ext_contract(staking_pool)]
 pub trait StakingPool {
@@ -74,26 +75,27 @@ impl PoolDetails {
                 value,
                 &env::current_account_id(),
                 0,
-                CALLBACK
+                CALLBACK,
             ));
 
         true
     }
 
-    pub fn get_all_fields(&self) -> &HashMap<u64, Field> {
-        &self.fields
+    pub fn get_all_fields(&self) -> HashMap<u64, Vec<Field>> {
+        self.fields.iter().collect()
     }
 
     fn get_field_id(&self, pool_id: String, name: String) -> u64 {
         // TODO please help to optimize loop
-        for (_key, value) in &self.fields {
+        /*for (_key, value) in &self.fields {
             if value.pool_id == pool_id && value.name == name {
                 env::log(format!("Field {} updated for pool {}",name, pool_id).as_bytes());
                 return value.field_id;
             }
         }
         env::log(format!("Field {} added for pool {}", name, pool_id).as_bytes());
-        return *self.fields.keys().max().unwrap_or(&0u64) + 1;
+        */
+        return self.fields.keys().max().unwrap_or(0u64) + 1;
     }
 
     /*
@@ -122,13 +124,13 @@ impl PoolDetails {
         let field_id = self.get_field_id(pool_id.clone(), name.clone());
 
         self.fields.insert(
-            field_id,
-            Field {
+            &field_id,
+            &vec![Field {
                 field_id,
                 pool_id,
                 name,
                 value,
-            },
+            }],
         );
 
         true
