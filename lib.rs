@@ -26,7 +26,7 @@ pub trait ExtPoolDetails {
     fn on_get_owner_id(
         &mut self,
         #[callback] get_owner_id: String,
-        staking_pool_account_id: String,
+        current_user_account_id: String,
         pool_id: String,
         name: String,
         value: String,
@@ -48,10 +48,8 @@ impl PoolDetails {
 
         assert!(value != "", "Abort. Value is empty");
 
-        let _owner_account_id_to_compare: String = env::signer_account_id().clone();
-
         staking_pool::get_owner_id(&pool_id, 0, BASE).then(ext_self_owner::on_get_owner_id(
-            _owner_account_id_to_compare,
+            env::predecessor_account_id(),
             pool_id,
             name,
             value,
@@ -74,7 +72,7 @@ impl PoolDetails {
     pub fn on_get_owner_id(
         &mut self,
         #[callback] owner_id: String,
-        staking_pool_account_id: String,
+        current_user_account_id: String,
         pool_id: String,
         name: String,
         value: String,
@@ -82,10 +80,11 @@ impl PoolDetails {
         assert_self();
 
         assert!(
-            owner_id == staking_pool_account_id,
-            "You are not the owner of pool. Login as {} in order to update {}",
+            owner_id == current_user_account_id,
+            "You are not the owner of pool. Login as {} in order to update {}. Your current account is {}",
             owner_id,
-            pool_id
+            pool_id,
+            current_user_account_id
         );
 
         env::log(format!("Field {} added for pool {}", name, pool_id).as_bytes());
