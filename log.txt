@@ -1,0 +1,50 @@
+# near call dev-1602030039886-3132036 update_field '{"pool_id": "node.pool.6fb1358", "name": "url", "value": "https://zavodil.ru"}' --accountId=zavodil.testnet  --gas=100000000000000
+Scheduling a call: dev-1602030039886-3132036.update_field({"pool_id": "node.pool.6fb1358", "name": "url", "value": "https://zavodil.ru"})
+Receipt: AiY8LJdPCXT9YknWZRUPBT7U4EELp3nHwJ1Y1URdCLtq
+        Log [dev-1602030039886-3132036]: Field url added for pool node.pool.6fb1358
+Transaction Id null
+
+# near view dev-1602030039886-3132036 get_all_fields
+View call: dev-1602030039886-3132036.get_all_fields()
+{
+  '1': {
+    field_id: 1,
+    pool_id: 'node.pool.6fb1358',
+    name: 'url',
+    value: 'https://zavodil.ru'
+  }
+}
+
+# near call dev-1602030039886-3132036 update_field '{"pool_id": "node.pool.6fb1358", "name": "twitter", "value": "zavodil_old"}' --accountId=zavodil.testnet  --gas=100000000000000
+Scheduling a call: dev-1602030039886-3132036.update_field({"pool_id": "node.pool.6fb1358", "name": "twitter", "value": "zavodil_old"})
+Receipt: B1WPah7HSD9yh9XQmMsxK3mdRWrTRJJowFb3xrZG8mAL
+        Log [dev-1602030039886-3132036]: Field twitter added for pool node.pool.6fb1358
+Transaction Id null
+
+# near call dev-1602030039886-3132036 update_field '{"pool_id": "node.pool.6fb1358", "name": "twitter", "value": "zavodil_ru"}' --accountId=zavodil.testnet  --gas=100000000000000
+Scheduling a call: dev-1602030039886-3132036.update_field({"pool_id": "node.pool.6fb1358", "name": "twitter", "value": "zavodil_ru"})
+Receipt: 6REsmMTThDs1jptLpSzmVgVxm6sPMZtxkpxd2g139SeU
+        Log [dev-1602030039886-3132036]: Field twitter updated for pool node.pool.6fb1358
+Transaction Id null
+
+# near view dev-1602030039886-3132036 get_all_fields
+View call: dev-1602030039886-3132036.get_all_fields()
+{
+  '1': {
+    field_id: 1,
+    pool_id: 'node.pool.6fb1358',
+    name: 'url',
+    value: 'https://zavodil.ru'
+  },
+  '2': {
+    field_id: 2,
+    pool_id: 'node.pool.6fb1358',
+    name: 'twitter',
+    value: 'zavodil_ru'
+  }
+}
+
+# near call dev-1602030039886-3132036 update_field '{"pool_id": "valeraverim.pool.f863973.m0", "name": "twitter", "value": "wrong_tiotter"}' --accountId=zavodil.testnet  --gas=100000000000000
+ Scheduling a call: dev-1602030039886-3132036.update_field({"pool_id": "valeraverim.pool.f863973.m0", "name": "twitter", "value": "wrong_tiotter"})
+ Receipt: 6wk2YoMJ7fJgVG4VJyi5im6U4yfHnLEAuAQBVmdtc8ho
+ Failure [dev-1602030039886-3132036]: Error: Smart contract panicked: panicked at &#39;You are not the owner of pool. Login as valeraverim.testnet in order to update valeraverim.pool.f863973.m0', src/lib.rs:115:9"
