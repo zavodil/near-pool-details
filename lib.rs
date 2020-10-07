@@ -4,7 +4,9 @@ use near_sdk::wee_alloc;
 use near_sdk::{env, ext_contract, near_bindgen};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use near_sdk::collections::UnorderedMap;
 use near_sdk::Gas;
+
 
 const BASE: Gas = 25_000_000_000_000;
 pub const CALLBACK: Gas = BASE * 2;
@@ -20,8 +22,11 @@ pub struct Field {
     pub value: String,
 }
 
-type FieldsByPools = near_sdk::collections::UnorderedMap<u64, Vec<Field>>;
-//type FieldsByPools = HashMap<u64, Field>;
+//type FieldsByPools = near_sdk::collections::UnorderedMap<u64, Vec<Field>>;
+type PoolId = String;
+type FieldName = String;
+type FieldValue = String;
+type FieldsStorageByPoolId = UnorderedMap<PoolId, UnorderedMap<FieldName, FieldValue>>;
 
 #[ext_contract(staking_pool)]
 pub trait StakingPool {
@@ -43,7 +48,7 @@ pub trait ExtPoolDetails {
 #[near_bindgen]
 #[derive(Default, BorshDeserialize, BorshSerialize)]
 pub struct PoolDetails {
-    fields: FieldsByPools
+    fields_by_pool: FieldsStorageByPoolId
 }
 
 #[near_bindgen]
@@ -81,22 +86,24 @@ impl PoolDetails {
         true
     }
 
-    pub fn get_all_fields(&self) -> HashMap<u64, Vec<Field>> {
-        self.fields.iter().collect()
+    pub fn get_all_fields(&self) -> HashMap<String, UnorderedMap<FieldName, FieldValue>> {
+        self.fields_by_pool.iter().collect()
     }
 
+    /*
     fn get_field_id(&self, pool_id: String, name: String) -> u64 {
         // TODO please help to optimize loop
-        /*for (_key, value) in &self.fields {
+        for (_key, value) in &self.fields {
             if value.pool_id == pool_id && value.name == name {
                 env::log(format!("Field {} updated for pool {}",name, pool_id).as_bytes());
                 return value.field_id;
             }
         }
         env::log(format!("Field {} added for pool {}", name, pool_id).as_bytes());
-        */
+
         return self.fields.keys().max().unwrap_or(0u64) + 1;
     }
+*/
 
     /*
     pub fn get_all_field_by_pool(&self, pool_id :String) -> Option<Field> {
@@ -121,6 +128,10 @@ impl PoolDetails {
             pool_id
         );
 
+        let mut pool_fields = self.fields_by_pool.get(&pool_id).unwrap_or_default();
+        pool_fields.insert(&name, &value);
+
+        /*
         let field_id = self.get_field_id(pool_id.clone(), name.clone());
 
         self.fields.insert(
@@ -132,6 +143,7 @@ impl PoolDetails {
                 value,
             }],
         );
+        */
 
         true
     }
