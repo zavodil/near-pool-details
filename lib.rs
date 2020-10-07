@@ -96,8 +96,8 @@ impl PoolDetails {
 
         true
     }
+}
 
-    pub fn assert_self() {
-        assert_eq!(env::predecessor_account_id(), env::current_account_id());
-    }
+fn assert_self() {
+    assert_eq!(env::predecessor_account_id(), env::current_account_id());
 }
