@@ -12,7 +12,7 @@ pub const CALLBACK: Gas = BASE * 2;
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
-#[derive(Debug, Clone, Default, BorshDeserialize, BorshSerialize)]
+#[derive(Debug, Clone, Default, BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
 pub struct Field {
     pub field_id: u64,
     pub pool_id: String,
