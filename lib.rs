@@ -17,9 +17,13 @@ type FieldValue = String;
 type FieldsStorageByPoolId = UnorderedMap<PoolId, HashMap<FieldName, FieldValue>>;
 
 #[ext_contract(staking_pool)]
-pub trait StakingPool {
+pub trait ExtStakingPool {
     fn get_owner_id(&self) -> String;
-    fn get_is_whitelisted(&self) -> bool;
+}
+
+#[ext_contract(lockup_whitelist)]
+pub trait ExtWhitelist {
+    fn is_whitelisted(&self) -> bool;
 }
 
 #[ext_contract(ext_self_owner)]
@@ -33,9 +37,9 @@ pub trait ExtPoolDetails {
         value: String,
     ) -> bool;
 
-    fn on_get_is_whitelisted(
+    fn on_is_whitelisted(
         &mut self,
-        #[callback] get_is_whitelisted: bool,
+        #[callback] is_whitelisted: bool,
         pool_id: String,
     ) -> bool;
 }
@@ -55,7 +59,7 @@ impl PoolDetails {
 
         assert!(value != "", "Abort. Value is empty");
 
-        staking_pool::get_is_whitelisted(&pool_id, 0, BASE).then(ext_self_owner::on_get_is_whitelisted(
+        lockup_whitelist::is_whitelisted(&pool_id, 0, BASE).then(ext_self_owner::on_is_whitelisted(
             pool_id.clone(),
             &env::current_account_id(),
             0,
@@ -98,7 +102,7 @@ impl PoolDetails {
         self.fields_by_pool.get(&pool_id)
     }
 
-    pub fn on_get_is_whitelisted(
+    pub fn on_is_whitelisted(
         &mut self,
         #[callback] is_whitelisted: bool,
         pool_id: String,
