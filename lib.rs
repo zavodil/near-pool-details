@@ -23,7 +23,7 @@ pub trait ExtStakingPool {
 
 #[ext_contract(lockup_whitelist)]
 pub trait ExtWhitelist {
-    fn is_whitelisted(&self) -> bool;
+    fn is_whitelisted(&self, staking_pool_account_id: AccountId) -> bool;
 }
 
 #[ext_contract(ext_self_owner)]
@@ -35,12 +35,6 @@ pub trait ExtPoolDetails {
         pool_id: String,
         name: String,
         value: String,
-    ) -> bool;
-
-    fn on_is_whitelisted(
-        &mut self,
-        #[callback] is_whitelisted: bool,
-        pool_id: String,
     ) -> bool;
 }
 
@@ -59,13 +53,9 @@ impl PoolDetails {
 
         assert!(value != "", "Abort. Value is empty");
 
-        lockup_whitelist::is_whitelisted(&pool_id, 0, BASE).then(ext_self_owner::on_is_whitelisted(
-            pool_id.clone(),
-            &env::current_account_id(),
-            0,
-            CALLBACK,
-        )).then(
-            staking_pool::get_owner_id(&pool_id, 0, BASE).then(ext_self_owner::on_get_owner_id(
+        //  lockup-whitelist.near for Mainnet, whitelist.f863973.m0 for Tastnet
+        lockup_whitelist::is_whitelisted(pool_id.clone(), &"whitelist.f863973.m0".to_string(), 0, BASE).and(staking_pool::get_owner_id(&pool_id, 0, BASE))
+            .then(ext_self_owner::on_get_owner_id(
                 env::predecessor_account_id(),
                 pool_id,
                 name,
@@ -73,7 +63,7 @@ impl PoolDetails {
                 &env::current_account_id(),
                 0,
                 CALLBACK,
-            )));
+            ));
 
 
         true
@@ -102,10 +92,14 @@ impl PoolDetails {
         self.fields_by_pool.get(&pool_id)
     }
 
-    pub fn on_is_whitelisted(
+    pub fn on_get_owner_id(
         &mut self,
         #[callback] is_whitelisted: bool,
+        #[callback] owner_id: String,
+        current_user_account_id: String,
         pool_id: String,
+        name: String,
+        value: String,
     ) -> bool {
         assert_self();
 
@@ -114,19 +108,6 @@ impl PoolDetails {
             "Abort. Pool {} was not whitelisted.",
             pool_id
         );
-
-        true
-    }
-
-    pub fn on_get_owner_id(
-        &mut self,
-        #[callback] owner_id: String,
-        current_user_account_id: String,
-        pool_id: String,
-        name: String,
-        value: String,
-    ) -> bool {
-        assert_self();
 
         assert!(
             owner_id == current_user_account_id,
