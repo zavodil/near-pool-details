@@ -17,8 +17,13 @@ type FieldValue = String;
 type FieldsStorageByPoolId = UnorderedMap<PoolId, HashMap<FieldName, FieldValue>>;
 
 #[ext_contract(staking_pool)]
-pub trait StakingPool {
+pub trait ExtStakingPool {
     fn get_owner_id(&self) -> String;
+}
+
+#[ext_contract(lockup_whitelist)]
+pub trait ExtWhitelist {
+    fn is_whitelisted(&self, staking_pool_account_id: AccountId) -> bool;
 }
 
 #[ext_contract(ext_self_owner)]
@@ -48,21 +53,39 @@ impl PoolDetails {
 
         assert!(value != "", "Abort. Value is empty");
 
-        staking_pool::get_owner_id(&pool_id, 0, BASE).then(ext_self_owner::on_get_owner_id(
-            env::predecessor_account_id(),
-            pool_id,
-            name,
-            value,
-            &env::current_account_id(),
-            0,
-            CALLBACK,
-        ));
+        //  lockup-whitelist.near for Mainnet, whitelist.f863973.m0 for Tastnet
+        lockup_whitelist::is_whitelisted(pool_id.clone(), &"whitelist.f863973.m0".to_string(), 0, BASE).and(staking_pool::get_owner_id(&pool_id, 0, BASE))
+            .then(ext_self_owner::on_get_owner_id(
+                env::predecessor_account_id(),
+                pool_id,
+                name,
+                value,
+                &env::current_account_id(),
+                0,
+                CALLBACK,
+            ));
+
 
         true
     }
 
-    pub fn get_all_fields(&self) -> HashMap<PoolId, HashMap<FieldName, FieldValue>> {
-        self.fields_by_pool.iter().collect()
+    pub fn get_all_fields(&self, from_index: u64, limit: u64) -> HashMap<PoolId, HashMap<FieldName, FieldValue>> {
+        assert!(limit <= 100, "Abort. Limit > 100");
+
+        let keys = self.fields_by_pool.keys_as_vector();
+        let values = self.fields_by_pool.values_as_vector();
+
+        (from_index..std::cmp::min(from_index + limit, self.fields_by_pool.len()))
+            .map(|index| {
+                let key = keys.get(index).unwrap();
+                let value = values.get(index).unwrap();
+                (key, value)
+            })
+            .collect()
+    }
+
+    pub fn get_num_pools(&self) -> u64 {
+        self.fields_by_pool.len()
     }
 
     pub fn get_fields_by_pool(&self, pool_id: String) -> Option<HashMap<FieldName, FieldValue>> {
@@ -71,6 +94,7 @@ impl PoolDetails {
 
     pub fn on_get_owner_id(
         &mut self,
+        #[callback] is_whitelisted: bool,
         #[callback] owner_id: String,
         current_user_account_id: String,
         pool_id: String,
@@ -78,6 +102,12 @@ impl PoolDetails {
         value: String,
     ) -> bool {
         assert_self();
+
+        assert!(
+            is_whitelisted,
+            "Abort. Pool {} was not whitelisted.",
+            pool_id
+        );
 
         assert!(
             owner_id == current_user_account_id,
