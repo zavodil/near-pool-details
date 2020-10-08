@@ -53,8 +53,12 @@ impl PoolDetails {
 
         assert!(value != "", "Abort. Value is empty");
 
-        //  lockup-whitelist.near for Mainnet, whitelist.f863973.m0 for Tastnet
-        lockup_whitelist::is_whitelisted(pool_id.clone(), &"whitelist.f863973.m0".to_string(), 0, BASE).and(staking_pool::get_owner_id(&pool_id, 0, BASE))
+        assert!(name.len() <= 2000, "Abort. Name is longer then 2000 characters");
+
+        assert!(value.len() <= 4000, "Abort. Value is longer then 4000 characters");
+
+        //  lockup-whitelist.near for Mainnet, whitelist.f863973.m0 for Testnet
+        lockup_whitelist::is_whitelisted(pool_id.clone(), &"lockup-whitelist.near".to_string(), 0, BASE).and(staking_pool::get_owner_id(&pool_id, 0, BASE))
             .then(ext_self_owner::on_get_owner_id(
                 env::predecessor_account_id(),
                 pool_id,
