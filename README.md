@@ -21,9 +21,11 @@ Please find list of suggested field names in [FIELDS.md](https://github.com/zavo
 
 ## Examples
 
+```
 near call name.near update_field '{"pool_id": "zavodil.poolv1.near", "name": "url", "value": "https://zavodil.ru"}' --accountId=zavodil.near  --gas=200000000000000
-near call name.near update_field '{"pool_id": "zavodil.poolv1.near", "name": "twitter", "value": "zavodil_ru"}' --accountId=zavodil.near  --gas=200000000000000
 
+near call name.near update_field '{"pool_id": "zavodil.poolv1.near", "name": "twitter", "value": "zavodil_ru"}' --accountId=zavodil.near  --gas=200000000000000
+```
 
 ## To Run
 Open in the Gitpod link above or clone the repository.
