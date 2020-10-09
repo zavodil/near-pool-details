@@ -5,5 +5,7 @@ Set of suggested fields for `update_field` method:
 - twitter
 - email
 - discord
+- country
+- city
 
-Please update this list after you introduce new fields
+Please update this list with PR after you introduce new fields
