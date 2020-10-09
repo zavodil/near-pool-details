@@ -9,17 +9,17 @@ NEAR Staking Pool Details
 
 Add details about your whitelisted staking pool on NEAR blockchain.
 
-Current contract address in NEAR Mainnet: [name.near](https://explorer.near.org/accounts/name.near) 
+Current contract address in NEAR Mainnet: [`name.near`](https://explorer.near.org/accounts/name.near) 
 
 Check output: [near.zavodil.ru/?pools](https://near.zavodil.ru/?pools)
 
 ## Available methods
 
-- update_field '{"pool_id": "<<YOUR_POOL>>", "name": "<<FIELD_NAME>>", "value": "<<VALUE>>"}' --accountId=<<YOUR_POOL_OWNER_ACCOUNT_ID>> --gas=200000000000000
+- update_field '{"pool_id": "`<<YOUR_POOL>>`", "name": "`<<FIELD_NAME>>`", "value": "`<<VALUE>>`"}' --accountId=<<YOUR_POOL_OWNER_ACCOUNT_ID>> --gas=200000000000000
 
 Please find list of suggested field names in [FIELDS.md](https://github.com/zavodil/near-pool-details/blob/master/FIELDS.md) 
 - get_all_fields '{"from_index": 0, "limit": 100}'
-- get_fields_by_pool '{"pool_id": "<<YOUR_POOL>>"}' 
+- get_fields_by_pool '{"pool_id": "`<<YOUR_POOL>>`"}' 
 - get_num_pools
 
 ## Examples
