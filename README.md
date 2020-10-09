@@ -7,7 +7,8 @@ NEAR Staking Pool Details
 
 ## Description
 
-Add details about your whitelisted staking pool on NEAR blockchain. 
+Add details about your whitelisted staking pool on NEAR blockchain.
+Current contract address in NEAR Mainnet: [name.near](https://explorer.near.org/accounts/name.near) 
 
 ## Available methods
 
@@ -17,6 +18,12 @@ Please find list of suggested field names in [FIELDS.md](https://github.com/zavo
 - get_all_fields '{"from_index": 0, "limit": 100}'
 - get_fields_by_pool
 - get_num_pools
+
+## Examples
+
+near call name.near update_field '{"pool_id": "zavodil.poolv1.near", "name": "url", "value": "https://zavodil.ru"}' --accountId=zavodil.near  --gas=200000000000000
+near call name.near update_field '{"pool_id": "zavodil.poolv1.near", "name": "twitter", "value": "zavodil_ru"}' --accountId=zavodil.near  --gas=200000000000000
+
 
 ## To Run
 Open in the Gitpod link above or clone the repository.
@@ -84,17 +91,16 @@ const CONTRACT_NAME = 'YOUR_ACCOUNT_NAME_HERE'; /* TODO: fill this in! */
 …
 ```
 
-Start the example!
+Build
 
 ```
-yarn start
+yarn build
 ```
 
-## To Test
+Deploy
 
 ```
-cd contract
-cargo test -- --nocapture
+yarn deploy
 ```
 
 ## To Explore
