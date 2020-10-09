@@ -1,7 +1,7 @@
 Set of suggested fields for `update_field` method:
 
 - url
-- twiiter
+- twitter
 - email
 - description
 
