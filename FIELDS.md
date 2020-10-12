@@ -8,6 +8,7 @@ Set of suggested fields for `update_field` method:
 - discord
 - country
 - city
+- github
 
 Please update this list with PR after you introduce new fields
 
