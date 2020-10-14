@@ -1,10 +1,13 @@
 Set of suggested fields for `update_field` method:
 
 - description
+- logo
+- name
 - country_code
 - url
 - twitter
 - email
+- telegram
 - discord
 - country
 - city
