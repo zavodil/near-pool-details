@@ -29,13 +29,13 @@ Please find list of suggested field names in [FIELDS.md](https://github.com/zavo
 ## Examples
 
 ```
-near call name.near update_field '{"pool_id": "zavodil.poolv1.near", "name": "url", "value": "https://zavodil.ru"}' --accountId=zavodil.near  --gas=200000000000000
+near call pool-details.near update_field '{"pool_id": "zavodil.poolv1.near", "name": "url", "value": "https://zavodil.ru"}' --accountId=zavodil.near  --gas=200000000000000
 
-near call name.near update_field '{"pool_id": "zavodil.poolv1.near", "name": "twitter", "value": "zavodil_ru"}' --accountId=zavodil.near  --gas=200000000000000
+near call pool-details.near update_field '{"pool_id": "zavodil.poolv1.near", "name": "twitter", "value": "zavodil_ru"}' --accountId=zavodil.near  --gas=200000000000000
 
-near view  name.near get_all_fields '{"from_index": 0, "limit": 3}'
+near view pool-details.near get_all_fields '{"from_index": 0, "limit": 3}'
 
-near view  name.near get_fields_by_pool '{"pool_id": "zavodil.poolv1.near"}' 
+near view pool-details.near get_fields_by_pool '{"pool_id": "zavodil.poolv1.near"}' 
 
 ```
 
