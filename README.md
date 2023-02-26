@@ -1,7 +1,16 @@
-NEAR Staking Pool Details
+NEAR Staking Pool Details [pool-details.near]
 =================================
 
 Contract migrated from `name.near` to `pool-details.near`
+
+Front ends:
+---
+Add pool details: 
+- https://near.social/#/zavodil.near/widget/add-pool-details
+
+View pool details: 
+- https://near.social/#/zavodil.near/widget/StakingPools
+- https://zavodil.near.page/?pools
 
 ----
 
@@ -14,8 +23,6 @@ Contract migrated from `name.near` to `pool-details.near`
 Add details about your whitelisted staking pool on NEAR blockchain.
 
 Current contract address in NEAR Mainnet: [`pool-details.near`](https://explorer.near.org/accounts/pool-details.near) 
-
-Check output: [zavodil.near.page/?pools](https://zavodil.near.page/?pools)
 
 ## Available methods
 
